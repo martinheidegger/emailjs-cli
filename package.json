@@ -1,7 +1,7 @@
 {
   "name": "emailjs-cli",
   "description": "send text/html emails and attachments (files, streams and strings) using the cli to any smtp server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Martin Heidegger <martin.heidegger@gmail.com>",
   "bin": {
     "emailjs": "bin/emailjs"
