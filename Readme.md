@@ -22,7 +22,7 @@ send emails, html and attachments (files, streams and strings) from your cli to 
 ## EXAMPLE USAGE
 
 ```bash
-$ emailjs -s "Subject" -t "Full text" -to "A Person <sender@superrito.com>" -from "A Person <recipient@superrito.com>; Another Person <recipient2@superrito.com>" -
+$ emailjs -s "Subject" -t "Full text" -to "A Person <sender@superrito.com>" -from "A Person <recipient@superrito.com>; Another Person <recipient2@superrito.com>" --host "smtp.gmail.com" --ssl
 ```
 	
 ## Authors

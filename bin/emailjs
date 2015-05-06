@@ -5,26 +5,31 @@ var path = require('path');
 var confirm = require('confirm-cli');
 var synopsis = fs.readFileSync(path.join(__dirname, 'synopsis'), 'utf8');
 
-function showHelp() {
+function showHelp()
+{
 	console.log(fs.readFileSync(path.join(__dirname, 'usage'), 'utf8').replace("%SYNOPSIS%", synopsis));
 }
 
-function finallySendMail(server, mail, callback) {
+function finallySendMail(server, mail, callback)
+{
 	var email 	= require("emailjs");
 	var server 	= email.server.connect(server);
 
 	// send the message and get a callback with an error or details of the message that was sent
-	server.send(mail, function(err, message) {
-		if (err) {
+	server.send(mail, function(err, message)
+	{
+		if(err)
+		{
 			console.log(err);
 			process.exit(1);
 		}
-		console.log(err || message);
+		console.log("SUCCESSFULLY SENT!");
+		console.log(message);
 	});
 }
 
-function sendEmail(args, callback) {
-
+function sendEmail(args, callback)
+{
 	if(!args.host)
 		throw new Error("You need to supply a `host` to send the email!")
 
@@ -49,36 +54,49 @@ function sendEmail(args, callback) {
 	   subject:    args.s || args.subject || "",
 	   text:       args.t || args.text
 	}
-	if (args.attachment) {
+	if(args.attachment)
+	{
 		mail.attachment = args.attachment;
 	}
-	if (args.cc) {
+	if(args.cc)
+	{
 		mail.cc = args.cc;
 	}
-	if (args.bcc) {
+	if(args.bcc)
+	{
 		mail.bcc = args.bcc;
 	}
-	if (args.confirm) {
+	if(args.confirm)
+	{
 		logConfirm(server);
 		logConfirm(mail);
 		confirm('Can we send this?', finallySendMail.bind(null, args, mail, callback), process.exit.bind(process));
-	} else {
+	}
+	else
+	{
 		finallySendMail(server, mail, callback);
 	}
 }
 
-function logConfirm(object) {
-	Object.keys(object).forEach(function (key) {
+function logConfirm(object)
+{
+	Object.keys(object).forEach(function(key)
+	{
 		var value = object[key];
-		if (value === undefined) {
+		if(value === undefined)
+		{
 			return;
 		}
 		console.log(key.toUpperCase() + ":");
-		if (key === "to" || key === "cc" || key === "bcc") {
-			value.split(",").forEach(function(email) {
+		if(key === "to" || key === "cc" || key === "bcc")
+		{
+			value.split(",").forEach(function(email)
+			{
 				console.log("     - " + email);
 			})
-		} else {
+		}
+		else
+		{
 			console.log("     " + value);
 		}
 		console.log("");
@@ -107,7 +125,9 @@ getArgs(process.argv.slice(2), function(error, args)
 		sendEmail(args, function(error, data) {
 			console.log(synopsis);	
 		})	
-	} catch(e) {
+	}
+	catch(e)
+	{
 		console.log(e.message);
 		process.exit(1);
 	}
