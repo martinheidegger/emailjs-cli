@@ -128,7 +128,8 @@ getArgs(process.argv.slice(2), function(error, args)
 	}
 	catch(e)
 	{
-		console.log(e.message);
+		console.error("ERROR: " + e.message);
+		console.log("\n" + synopsis);
 		process.exit(1);
 	}
 });

@@ -2,7 +2,7 @@ NAME
      emailjs
 
 SYNOPSIS
-     %SYNOPSIS%
+%SYNOPSIS%
 
 DESCRIPTION
      The emailjs utility sends emails through a smtp server.
@@ -13,7 +13,7 @@ DESCRIPTION
 
      --user, -u      Username for the SMTP Server
 
-     --password, -a  Password for the SMTP Server
+     --password, -p  Password for the SMTP Server
 
      --ssl           Connect to the SMTP Server using SSL
 
