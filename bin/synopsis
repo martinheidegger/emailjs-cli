@@ -1,0 +1,4 @@
+     emailjs [--help] [--pipe] [--host=host] [--user=user]
+             [--password=password] [--ssl] [--subject=text]
+             [--text=text] [--from=email] [--to=email] [--cc=email]
+             [--bcc=email] [--version] [--confirm]

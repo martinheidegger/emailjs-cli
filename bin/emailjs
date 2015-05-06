@@ -1,0 +1,114 @@
+#!/usr/bin/env node
+var getArgs = require('./getArgs');
+var fs = require('fs');
+var path = require('path');
+var confirm = require('confirm-cli');
+var synopsis = fs.readFileSync(path.join(__dirname, 'synopsis'), 'utf8');
+
+function showHelp() {
+	console.log(fs.readFileSync(path.join(__dirname, 'usage'), 'utf8').replace("%SYNOPSIS%", synopsis));
+}
+
+function finallySendMail(server, mail, callback) {
+	var email 	= require("emailjs");
+	var server 	= email.server.connect(server);
+
+	// send the message and get a callback with an error or details of the message that was sent
+	server.send(mail, function(err, message) {
+		if (err) {
+			console.log(err);
+			process.exit(1);
+		}
+		console.log(err || message);
+	});
+}
+
+function sendEmail(args, callback) {
+
+	if(!args.host)
+		throw new Error("You need to supply a `host` to send the email!")
+
+	if(!args.to)
+		throw new Error("You need to supply a `to` field that contains the recipients email address!")
+
+	if(!args.from)
+		throw new Error("You need to supply a `from` field that contains the senders email address!")
+
+	if(!args.text && !args.t)
+		throw new Error("You need to supply a `text`!")
+
+	var server = {
+	   user:    args.u || args.user, 
+	   password:args.p || args.password, 
+	   host:    args.host, 
+	   ssl:     args.ssl || false
+	};
+	var mail = {
+	   from:       args.f || args.from || "", 
+	   to:         args.to || "",
+	   subject:    args.s || args.subject || "",
+	   text:       args.t || args.text
+	}
+	if (args.attachment) {
+		mail.attachment = args.attachment;
+	}
+	if (args.cc) {
+		mail.cc = args.cc;
+	}
+	if (args.bcc) {
+		mail.bcc = args.bcc;
+	}
+	if (args.confirm) {
+		logConfirm(server);
+		logConfirm(mail);
+		confirm('Can we send this?', finallySendMail.bind(null, args, mail, callback), process.exit.bind(process));
+	} else {
+		finallySendMail(server, mail, callback);
+	}
+}
+
+function logConfirm(object) {
+	Object.keys(object).forEach(function (key) {
+		var value = object[key];
+		if (value === undefined) {
+			return;
+		}
+		console.log(key.toUpperCase() + ":");
+		if (key === "to" || key === "cc" || key === "bcc") {
+			value.split(",").forEach(function(email) {
+				console.log("     - " + email);
+			})
+		} else {
+			console.log("     " + value);
+		}
+		console.log("");
+	});
+}	
+
+getArgs(process.argv.slice(2), function(error, args)
+{
+	if(error)
+	{
+		console.log("Couldn't process input arguments: ");
+		console.log(error.stack);
+		process.exit(1);
+	}
+	if(args.v || args.version)
+	{
+		console.log(require('../package.json').version);
+		return;
+	}
+	if(args.h || args.help || args[0] === 'help' || args[0] === 'h')
+	{
+		showHelp();
+		return;
+	}
+	try {
+		sendEmail(args, function(error, data) {
+			console.log(synopsis);	
+		})	
+	} catch(e) {
+		console.log(e.message);
+		process.exit(1);
+	}
+});

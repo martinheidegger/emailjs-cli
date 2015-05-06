@@ -1,0 +1,96 @@
+NAME
+     emailjs
+
+SYNOPSIS
+     %SYNOPSIS%
+
+DESCRIPTION
+     The emailjs utility sends emails through a smtp server.
+
+     --pipe          Piping json data from stdin
+
+     --host          Host of the SMTP Server
+
+     --user, -u      Username for the SMTP Server
+
+     --password, -a  Password for the SMTP Server
+
+     --ssl           Connect to the SMTP Server using SSL
+
+     --subject, -s   Subject of the email
+
+     --text, -t      Text of the email (body)
+
+     --from, -f      Person to be used as sender
+
+     --to            Person to send the mail to
+
+     --cc            Person to send the mail to in cc
+
+     --bcc           Person to send the mail to in bcc
+
+     --help, -h      Shows this text
+
+     --version, -v   Shows the version number
+
+     --confirm       Ask for confirmation before sending
+
+PIPING
+     You can pass in all the properties using the arguments but you 
+     can also pipe-in a json object that contains some of the
+     arguments to add arguments.
+
+     To pipe-in data you have to add the --pipe property.
+
+     Example:
+          echo "{\"user\":\"me\"}" | emailjs --pipe
+
+ATTACHMENTS
+     You can also send attachments through the API. Since the 
+     definition is quite complex you can only do that using the pipe-mode.
+
+          {
+               "attachment": [ ... list of attachments ... ]
+          }
+
+     One attachment is an object that has one of the following
+     fields:
+
+          path
+               string to where the file is located
+          data
+               string of the data you want to attach
+
+     And can additionally have:
+
+          type
+               string of the file mime type
+
+          name 
+               name to give the file as perceived by the recipient
+
+          charset
+               charset to encode attachment in
+
+          method 
+               method to send attachment as
+               (used by calendar invites)
+
+          alternative
+               if true, will be attached inline as an alternative
+               (also defaults type='text/html')
+
+          inline
+               if true, will be attached inline
+
+          encoded
+               set this to true if the data is already base64
+               encoded, (avoid this if possible)
+
+          headers
+               object containing header=>value pairs for inclusion
+               in this attachment's header
+
+          related
+               an array of attachments that you want to be related
+               to the parent attachment
